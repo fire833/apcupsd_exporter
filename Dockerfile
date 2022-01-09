@@ -6,6 +6,8 @@ RUN go build cmd/apcupsd_exporter/main.go
 
 FROM alpine:latest
 
+LABEL org.opencontainers.image.source https://github.com/fire833/apcupsd_exporter
+
 RUN apk update
 RUN apk upgrade
 
