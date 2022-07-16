@@ -1,11 +1,11 @@
 package apcupsdexporter
 
 import (
-	"log"
 	"time"
 
 	"github.com/mdlayher/apcupsd"
 	"github.com/prometheus/client_golang/prometheus"
+	"k8s.io/klog/v2"
 )
 
 var _ StatusSource = &apcupsd.Client{}
@@ -203,7 +203,7 @@ func (c *UPSCollector) Describe(ch chan<- *prometheus.Desc) {
 func (c *UPSCollector) Collect(ch chan<- prometheus.Metric) {
 	s, err := c.ss.Status()
 	if err != nil {
-		log.Printf("failed collecting UPS metrics: %v", err)
+		klog.V(1).Infof("failed collecting UPS metrics: %v", err)
 		ch <- prometheus.NewInvalidMetric(c.Info, err)
 		return
 	}

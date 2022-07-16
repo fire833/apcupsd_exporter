@@ -1,0 +1,32 @@
+name: Container image build/push
+
+on:
+  push:
+    tags:
+      - "*"
+
+jobs:
+  build-push:
+    runs-on: ubuntu-latest
+    steps:
+    
+    - name: Checkout
+      uses: actions/checkout@v3
+    
+    - name: Build image
+      uses: redhat-actions/buildah-build@v2.10
+      with:
+        image: ghcr.io/fire833/apcupsd_exporter
+        tags: ${{ env.GITHUB_REF_NAME }}
+        containerfiles: .
+        build-args: |
+          VERSION=${{ env.GITHUB_REF_NAME }}
+
+    - name: Push image
+      uses: redhat-actions/push-to-registry@v2.6
+      with:
+        image: ghcr.io/fire833/apcupsd_exporter
+        tags: ${{ env.GITHUB_REF_NAME }}
+        registry: ghcr.io
+        username: ${{ github.repository_owner }}
+        password: ${{ secrets.GHCRPAT }}

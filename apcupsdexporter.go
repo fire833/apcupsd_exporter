@@ -5,11 +5,11 @@ package apcupsdexporter
 import (
 	"context"
 	"fmt"
-	"log"
 	"time"
 
 	"github.com/mdlayher/apcupsd"
 	"github.com/prometheus/client_golang/prometheus"
+	"k8s.io/klog/v2"
 )
 
 // TODO(mdlayher): rework this with metricslite.
@@ -66,7 +66,7 @@ func (e *Exporter) Collect(ch chan<- prometheus.Metric) {
 	// This is a hack but it allows us to report failure to dial without
 	// reworking significant portions of the code.
 	if err != nil {
-		log.Println(err)
+		klog.V(1).Infof("%v", err)
 		ch <- prometheus.NewInvalidMetric(NewUPSCollector(nil).Info, err)
 		return
 	}
